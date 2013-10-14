@@ -6,6 +6,8 @@ public class Field {
 
     private char[][] field = new char[FIELD_SIZE][FIELD_SIZE];
 
+    private char lastImput =' ';
+
     private boolean proverkaVvoda(int cX, int cY, char m) {
         return cX < 0 | cX >= 3 | cY < 0 | cY >= 3 | !(m == 'x' | m == '0');
     }
@@ -59,7 +61,7 @@ public class Field {
         char znachenieMark=field[1][1];
         int sum=0;
         for (int i = 0, j = 0; i < 3; i++, j++) {
-            if (field[i][j] == znachenieMark) {
+            if ((field[i][j] == znachenieMark) & (field[i][j] != ' ')) {
                 sum++;
             }
             if (sum == 3) {
@@ -69,7 +71,7 @@ public class Field {
 
         sum = 0;
         for (int i = 2, j = 0; j < 3; i--, j++) {
-            if (field[i][j] == znachenieMark) {
+            if ((field[i][j] == znachenieMark) & (field[i][j] != ' ')) {
                 sum++;
             }
             if (sum == 3) {
@@ -86,11 +88,18 @@ public class Field {
             eraseField();
             return;
         }
+        if (lastImput != ' ') {
+            if (lastImput == mark) {
+                System.out.println("Этот игрок уже ходил, сейчас должен ходить другой игрок.");
+                return;
+            }
+        } else {lastImput = mark;}
         if (mark == 'x') {
             field[cellX][cellY] = 'X';
         } else {
             field[cellX][cellY] = '0';
         }
+        lastImput = mark;
         showField();
     }
 
