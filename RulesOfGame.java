@@ -7,14 +7,17 @@ public class RulesOfGame {
     }
 
     public boolean isFinish() {
-        if (gameField.isFilledLine()) {
-            System.out.println("Партия закончена! Победа!");
-            return true;
-        }
+
         if (gameField.isFilled()) {
             System.out.println("Партия закончена! Ничья! Ходов больше нет!");
             return true;
         }
+
+        if (gameField.isFilledLine()) {
+            System.out.println("Партия закончена! Победа!");
+            return true;
+        }
+
         return false;
     }
 

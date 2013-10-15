@@ -8,8 +8,12 @@ public class Field {
 
     private char lastImput =' ';
 
+    private final char FIRST_PLAYER_MARK = 'x';
+
+    private final char SECOND_PLAYER_MARK = '0';
+
     private boolean proverkaVvoda(int cX, int cY, char m) {
-        return cX < 0 | cX >= 3 | cY < 0 | cY >= 3 | !(m == 'x' | m == '0');
+        return cX < 0 | cX >= 3 | cY < 0 | cY >= 3 | !(m == FIRST_PLAYER_MARK | m == SECOND_PLAYER_MARK);
     }
 
     public boolean isFilled() {
@@ -30,30 +34,45 @@ public class Field {
 
     private boolean isRowsFilled() {
         char znachenieMark;
+
+        int sum = 0;
+
         for (int i = 0; i < 3; i++) {
             znachenieMark = field[i][i];
             for (int j = 0; j < 3; j++) {
-                if (field[j][i] != znachenieMark) {
-                    return false;
+                if ((field[i][j] == znachenieMark) & (field[i][j] != DEFAULT_CELL_VALUE)) {
+                    sum++;
+                } else { break; }
+
+                if (sum == 3) {
+                    return true;
                 }
             }
+            sum=0;
         }
-        return true;
+        return false;
     }
 
     private boolean isColumnsFilled() {
 
         char znachenieMark;
 
+        int sum=0;
+
         for (int i = 0; i < 3; i++) {
             znachenieMark = field[i][i];
             for (int j = 0; j < 3; j++) {
-                if (field[i][j] != znachenieMark) {
-                    return false;
+                if ((field[i][j] == znachenieMark) & (field[i][j] != DEFAULT_CELL_VALUE)) {
+                    sum++;
+                } else { break; }
+
+                if (sum == 3) {
+                    return true;
                 }
             }
+            sum=0;
         }
-        return true;
+        return false;
     }
 
     private boolean isDiagonalsFilled() {
@@ -61,9 +80,9 @@ public class Field {
         char znachenieMark=field[1][1];
         int sum=0;
         for (int i = 0, j = 0; i < 3; i++, j++) {
-            if ((field[i][j] == znachenieMark) & (field[i][j] != ' ')) {
+            if ((field[i][j] == znachenieMark) & (field[i][j] != DEFAULT_CELL_VALUE)) {
                 sum++;
-            }
+            } else { break; }
             if (sum == 3) {
                 return true;
             }
@@ -71,9 +90,9 @@ public class Field {
 
         sum = 0;
         for (int i = 2, j = 0; j < 3; i--, j++) {
-            if ((field[i][j] == znachenieMark) & (field[i][j] != ' ')) {
+            if ((field[i][j] == znachenieMark) & (field[i][j] != DEFAULT_CELL_VALUE)) {
                 sum++;
-            }
+            } else { break; }
             if (sum == 3) {
                 return true;
             }
@@ -88,13 +107,21 @@ public class Field {
             eraseField();
             return;
         }
-        if (lastImput != ' ') {
+        if (field[cellX][cellY] != DEFAULT_CELL_VALUE) {
+            System.out.println("Это поле уже помечено, введите другие координаты.");
+            showField();
+            return;
+        }
+
+        if (lastImput != DEFAULT_CELL_VALUE) {
             if (lastImput == mark) {
                 System.out.println("Этот игрок уже ходил, сейчас должен ходить другой игрок.");
+                showField();
                 return;
             }
         } else {lastImput = mark;}
-        if (mark == 'x') {
+
+        if (mark == FIRST_PLAYER_MARK) {
             field[cellX][cellY] = 'X';
         } else {
             field[cellX][cellY] = '0';
