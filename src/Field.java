@@ -6,14 +6,23 @@ public class Field {
 
     private char[][] field = new char[FIELD_SIZE][FIELD_SIZE];
 
-    private char lastImput =' ';
+    private char lastInput =' ';
 
     private final char FIRST_PLAYER_MARK = 'x';
 
     private final char SECOND_PLAYER_MARK = '0';
 
+
+    char getLastInput() {
+        return lastInput;
+    }
+
+    void setLastInput(char lastInput) {
+        this.lastInput = lastInput;
+    }
+
     private boolean proverkaVvoda(int cX, int cY, char m) {
-        return cX < 0 | cX >= 3 | cY < 0 | cY >= 3 | !(m == FIRST_PLAYER_MARK | m == SECOND_PLAYER_MARK);
+        return cX < 0 | cX >= 3 | cY < 0 | cY >= 3; // | !(m == FIRST_PLAYER_MARK | m == SECOND_PLAYER_MARK);
     }
 
     public boolean isFilled() {
@@ -37,9 +46,9 @@ public class Field {
 
         int sum = 0;
 
-        for (int i = 0; i < 3; i++) {
-            znachenieMark = field[i][i];
-            for (int j = 0; j < 3; j++) {
+        for (int j = 0; j < 3; j++) {
+            znachenieMark = field[j][j];
+            for (int i = 0; i < 3; i++) {
                 if ((field[i][j] == znachenieMark) & (field[i][j] != DEFAULT_CELL_VALUE)) {
                     sum++;
                 } else { break; }
@@ -113,20 +122,21 @@ public class Field {
             return;
         }
 
-        if (lastImput != DEFAULT_CELL_VALUE) {
-            if (lastImput == mark) {
+        if (lastInput != DEFAULT_CELL_VALUE) {
+            if (lastInput == mark) {
                 System.out.println("Этот игрок уже ходил, сейчас должен ходить другой игрок.");
                 showField();
                 return;
             }
-        } else {lastImput = mark;}
+        } else {
+            lastInput = mark;}
 
         if (mark == FIRST_PLAYER_MARK) {
             field[cellX][cellY] = 'X';
         } else {
             field[cellX][cellY] = '0';
         }
-        lastImput = mark;
+        lastInput = mark;
         showField();
     }
 

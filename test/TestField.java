@@ -16,13 +16,16 @@ public class TestField {
     @Test
     public void testWhatFilled() {
         Field field = new Field();
+        field.eraseField();
         int rand = (int)(Math.random()*2);
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 if (rand == 0) {
                     field.setCell(i, j, ZNACHENIE_POLYA_0);
+                    field.setLastInput(ZNACHENIE_POLYA_X);
                 }else {
                     field.setCell(i, j, ZNACHENIE_POLYA_X);
+                    field.setLastInput(ZNACHENIE_POLYA_0);
                 }
             }
         }
@@ -43,8 +46,10 @@ public class TestField {
                 } else {
                     if (rand == 0) {
                         field.setCell(i, j, ZNACHENIE_POLYA_0);
+                        field.setLastInput(ZNACHENIE_POLYA_X);
                     } else {
                         field.setCell(i, j, ZNACHENIE_POLYA_X);
+                        field.setLastInput(ZNACHENIE_POLYA_0);
                     }
                 }
             }
@@ -57,13 +62,16 @@ public class TestField {
     @Test
     public void testWhatFilledLineColumns() {
         Field field = new Field();
+        field.eraseField();
         int rand = (int)(Math.random()*2);
         int i = (int)(Math.random()*3);
         for (int j = 0; j < 3; j++) {
             if (rand == 0) {
                 field.setCell(i, j, ZNACHENIE_POLYA_0);
+                field.setLastInput(ZNACHENIE_POLYA_X);
             }else {
                 field.setCell(i, j, ZNACHENIE_POLYA_X);
+                field.setLastInput(ZNACHENIE_POLYA_0);
             }
         }
         assertEquals("Проверка на заполнение столбца.",true,field.isFilledLine());
@@ -72,13 +80,16 @@ public class TestField {
     @Test
     public void testWhatFilledLineRows() {
         Field field = new Field();
+        field.eraseField();
         int rand = (int)(Math.random()*2);
         int j = (int)(Math.random()*3);
         for (int i = 0; i < 3; i++) {
             if (rand == 0) {
                 field.setCell(i, j, ZNACHENIE_POLYA_0);
+                field.setLastInput(ZNACHENIE_POLYA_X);
             }else {
                 field.setCell(i, j, ZNACHENIE_POLYA_X);
+                field.setLastInput(ZNACHENIE_POLYA_0);
             }
         }
         assertEquals("Проверка на заполнение строки.",true,field.isFilledLine());
@@ -87,12 +98,15 @@ public class TestField {
     @Test
     public void testWhatFilledLineDiagonals() {
         Field field = new Field();
+        field.eraseField();
         int rand = (int)(Math.random()*2);
         for (int i = 2, j = 0; j < 3; i--, j++) {
             if (rand == 0) {
                 field.setCell(i, j, ZNACHENIE_POLYA_0);
+                field.setLastInput(ZNACHENIE_POLYA_X);
             }else {
                 field.setCell(i, j, ZNACHENIE_POLYA_X);
+                field.setLastInput(ZNACHENIE_POLYA_0);
             }
         }
         assertEquals("Проверка на заполнение восходящей диагонали.",true,field.isFilledLine());
@@ -101,8 +115,10 @@ public class TestField {
         for (int i = 0, j = 0; j < 3; i++, j++) {
             if (rand == 0) {
                 field.setCell(i, j, ZNACHENIE_POLYA_0);
+                field.setLastInput(ZNACHENIE_POLYA_X);
             }else {
                 field.setCell(i, j, ZNACHENIE_POLYA_X);
+                field.setLastInput(ZNACHENIE_POLYA_0);
             }
         }
         assertEquals("Проверка на заполнение нисходящей диагонали.",true,field.isFilledLine());
