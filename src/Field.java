@@ -1,4 +1,8 @@
+import com.intellij.util.containers.ArrayListSet;
+
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Field {
     Cell cell = new Cell();
@@ -13,8 +17,6 @@ public class Field {
 
     private final char FIRST_PLAYER_MARK = 'x';
 
-    private final char SECOND_PLAYER_MARK = '0';
-
 
     char getLastInput() {
         return lastInput;
@@ -24,14 +26,14 @@ public class Field {
         this.lastInput = lastInput;
     }
 
-    private boolean proverkaVvoda(int cX, int cY, char m) {
-        return cX < 0 | cX >= 3 | cY < 0 | cY >= 3; // | !(m == FIRST_PLAYER_MARK | m == SECOND_PLAYER_MARK);
+    private boolean proverkaVvoda(int cX, int cY) {
+        return cX < 0 | cX >= FIELD_SIZE | cY < 0 | cY >= FIELD_SIZE;
     }
 
     public boolean isFilled() {
         char znachenieMark=DEFAULT_CELL_VALUE;
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
+        for (int i = 0; i < FIELD_SIZE; i++) {
+            for (int j = 0; j < FIELD_SIZE; j++) {
                 if (field[i][j] == znachenieMark) {
                     return false;
                 }
@@ -49,14 +51,14 @@ public class Field {
 
         int sum = 0;
 
-        for (int j = 0; j < 3; j++) {
+        for (int j = 0; j < FIELD_SIZE; j++) {
             znachenieMark = field[j][j];
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < FIELD_SIZE; i++) {
                 if ((field[i][j] == znachenieMark) & (field[i][j] != DEFAULT_CELL_VALUE)) {
                     sum++;
                 } else { break; }
 
-                if (sum == 3) {
+                if (sum == FIELD_SIZE) {
                     return true;
                 }
             }
@@ -71,14 +73,14 @@ public class Field {
 
         int sum=0;
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < FIELD_SIZE; i++) {
             znachenieMark = field[i][i];
-            for (int j = 0; j < 3; j++) {
+            for (int j = 0; j < FIELD_SIZE; j++) {
                 if ((field[i][j] == znachenieMark) & (field[i][j] != DEFAULT_CELL_VALUE)) {
                     sum++;
                 } else { break; }
 
-                if (sum == 3) {
+                if (sum == FIELD_SIZE) {
                     return true;
                 }
             }
@@ -91,21 +93,21 @@ public class Field {
 
         char znachenieMark=field[1][1];
         int sum=0;
-        for (int i = 0, j = 0; i < 3; i++, j++) {
+        for (int i = 0, j = 0; i < FIELD_SIZE; i++, j++) {
             if ((field[i][j] == znachenieMark) & (field[i][j] != DEFAULT_CELL_VALUE)) {
                 sum++;
             } else { break; }
-            if (sum == 3) {
+            if (sum == FIELD_SIZE) {
                 return true;
             }
         }
 
         sum = 0;
-        for (int i = 2, j = 0; j < 3; i--, j++) {
+        for (int i = FIELD_SIZE - 1, j = 0; j < FIELD_SIZE; i--, j++) {
             if ((field[i][j] == znachenieMark) & (field[i][j] != DEFAULT_CELL_VALUE)) {
                 sum++;
             } else { break; }
-            if (sum == 3) {
+            if (sum == FIELD_SIZE) {
                 return true;
             }
         }
@@ -114,7 +116,7 @@ public class Field {
 
 
     public void setCell(int cellX, int cellY, char mark) {
-        if (proverkaVvoda(cellX, cellY, mark)) {
+        if (proverkaVvoda(cellX, cellY)) {
             System.out.println("Для ввода допустимы лишь 'x' и '0', а также координаты должны быть в диапазоне 1-3 включительно! Начните заново!");
             eraseField();
             return;
@@ -177,7 +179,7 @@ public class Field {
         System.out.print("[" + field[i][i2] + "]");
     }
 
-    // Класс для хранения и возврата координат cellX и cellY выбранного лучшего поля при поиске очередного хода
+    // Класс для хранения и возврата координат cellX и cellY выбранного лучшего поля при поиске очередного хода AI
     class Cell {
         int cellX;
         int cellY;
@@ -185,21 +187,199 @@ public class Field {
             cellX=0;
             cellY=0;
         }
+        Cell(int x, int y) {
+            this.cellX = x;
+            this.cellY = y;
+        }
     }
 
     public Cell findLineWith2MarkAndReturnFreeCell(char mark) {
-        //TODO возвращает рандомом координаты свободной клетки в линии, где уже 2 поля одинаково помечены
-        return new Cell();
+        //TODO улучшить, а то полный репит!!! Скорее всего выделить отдельную функцию, а то и больше.
+        int sum = 0;
+        ArrayList<Cell> massCells = new ArrayList<>();
+        Cell cellFree = new Cell();
+        for (int j = 0; j < FIELD_SIZE; j++) {
+            for (int i = 0; i < FIELD_SIZE; i++) {
+                if (field[i][j] == ' ') {
+                    cellFree.cellX = i;
+                    cellFree.cellY = j;
+                }
+
+                if (field[i][j] == mark) {
+                    sum++;
+                }
+
+                if (sum == FIELD_SIZE - 1) {
+                    if (i == cellFree.cellX) {
+                        massCells.add(cellFree);
+                    } else {
+                        cellFree.cellX++;
+                        massCells.add(cellFree);
+                    }
+                }
+            }
+            sum=0;
+        }
+
+        sum = 0;
+        for (int i = 0; i < FIELD_SIZE; i++) {
+            for (int j = 0; j < FIELD_SIZE; j++) {
+                if (field[i][j] == ' ') {
+                    cellFree.cellX = i;
+                    cellFree.cellY = j;
+                }
+
+                if (field[i][j] == mark) {
+                    sum++;
+                }
+
+                if (sum == FIELD_SIZE - 1) {
+                    if (i == cellFree.cellX) {
+                        boolean t = true;
+                        for (Cell c : massCells) {
+                            if ((c.cellX == cellFree.cellX) & (c.cellY == cellFree.cellY)) {
+                                t = false;
+                                break;
+                            }
+                        }
+                        if (t) {
+                            massCells.add(cellFree);
+                        }
+                    } else {
+                        cellFree.cellX++;
+                        boolean t = true;
+                        for (Cell c : massCells) {
+                            if ((c.cellX == cellFree.cellX) & (c.cellY == cellFree.cellY)) {
+                                t = false;
+                                break;
+                            }
+                        }
+                        if (t) {
+                            massCells.add(cellFree);
+                        }
+                    }
+                }
+            }
+            sum=0;
+        }
+
+        sum = 0;
+        for (int i = 0, j = 0; i < FIELD_SIZE; i++, j++) {
+
+            if (field[i][j] == ' ') {
+                cellFree.cellX = i;
+                cellFree.cellY = j;
+            }
+
+            if (field[i][j] == mark) {
+                sum++;
+            }
+
+            if (sum == FIELD_SIZE - 1) {
+                if (i != FIELD_SIZE -1) {
+                    boolean t = true;
+                    for (Cell c : massCells) {
+                        if ((c.cellX == cellFree.cellX) & (c.cellY == cellFree.cellY)) {
+                            t = false;
+                            break;
+                        }
+                    }
+                    if (t) {
+                        massCells.add(cellFree);
+                    }
+                } else {
+                    cellFree.cellX++;
+                    cellFree.cellY++;
+                    boolean t = true;
+                    for (Cell c : massCells) {
+                        if ((c.cellX == cellFree.cellX) & (c.cellY == cellFree.cellY)) {
+                            t = false;
+                            break;
+                        }
+                    }
+                    if (t) {
+                        massCells.add(cellFree);
+                    }
+                }
+            }
+        }
+
+        sum = 0;
+        for (int i = 2, j = 0; j < FIELD_SIZE; i--, j++) {
+
+            if (field[i][j] == ' ') {
+                cellFree.cellX = i;
+                cellFree.cellY = j;
+            }
+
+            if (field[i][j] == mark) {
+                sum++;
+            }
+
+            if (sum == FIELD_SIZE - 1) {
+                if (i != FIELD_SIZE -1) {
+                    boolean t = true;
+                    for (Cell c : massCells) {
+                        if ((c.cellX == cellFree.cellX) & (c.cellY == cellFree.cellY)) {
+                            t = false;
+                            break;
+                        }
+                    }
+                    if (t) {
+                        massCells.add(cellFree);
+                    }
+                } else {
+                    cellFree.cellX--;
+                    cellFree.cellY++;
+                    boolean t = true;
+                    for (Cell c : massCells) {
+                        if ((c.cellX == cellFree.cellX) & (c.cellY == cellFree.cellY)) {
+                            t = false;
+                            break;
+                        }
+                    }
+                    if (t) {
+                        massCells.add(cellFree);
+                    }
+                }
+            }
+        }
+
+        if (massCells.size() > 0) {
+            return massCells.get((int) (Math.random() * massCells.size()));
+        } else { return cell; }
     }
 
     public Cell findLineWith1MarkAndReturnRandomFreeCell(char mark) {
         //TODO возвращает рандомом координаты свободной клетки в линии, где уже 1 поле помечено, приоритет у поля, которое находится на пересечении двух таких линий
-         return new Cell();
+
+        int sum = 0;
+        ArrayList<Cell> massCells = new ArrayList<>();
+        Cell cellFree = new Cell();
+        for (int i = 0; i < FIELD_SIZE; i++) {
+            for (int j = 0; j < FIELD_SIZE; j++) {
+                if (field[i][j] == ' ') {
+                    cellFree.cellX = i;
+                    cellFree.cellY = j;
+                }
+
+                if (field[i][j] == mark) {
+                    sum++;
+                }
+
+                if (sum == FIELD_SIZE - 1) {
+                    massCells.add(cellFree);
+                }
+            }
+            sum=0;
+        }
+        if (massCells.size() > 0) {
+            return massCells.get((int) (Math.random() * massCells.size()));
+        } else { return cell; }
     }
 
-    public Cell randomCell() {
+    public Cell randomCell(char mark) {
         //TODO возвращает рандомом координаты свободной ячейки
         return new Cell();
     }
-
 }

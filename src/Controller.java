@@ -28,7 +28,7 @@ public class Controller {
                     cellX = scanner.nextInt()-1;
                     System.out.println();
                 } else {
-                    System.out.println("Не правильный ввод! Должна быть цифра! Введите ещё раз.");
+                    System.out.println("Неправильный ввод! Должна быть цифра! Введите ещё раз.");
                     scanner.next();
                     break;
                 }
@@ -38,7 +38,7 @@ public class Controller {
                     cellY = scanner.nextInt() - 1;
                     System.out.println();
                 } else {
-                    System.out.println("Не правильный ввод! Должна быть цифра! Введите ещё раз.");
+                    System.out.println("Неправильный ввод! Должна быть цифра! Введите ещё раз.");
                     scanner.next();
                     break;
                 }
@@ -54,7 +54,7 @@ public class Controller {
                     System.out.println();
                     System.out.print("Введите номер горизонтали(1-3): ");
                 } else {
-                    System.out.println("Не правильный ввод! Введите 0 или x.");
+                    System.out.println("Неправильный ввод! Введите 0 или x.");
                     break;
                 }
             }

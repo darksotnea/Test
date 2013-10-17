@@ -36,12 +36,12 @@ public class RulesOfGameAndLogic {
             aiMark = 'x';
         }
 
-        Field.Cell bestCell = findBestMove(gameField, gameField.getLastInput());
+        Field.Cell bestCell = findBestMove(gameField);
 
         gameField.setCell(bestCell.cellX, bestCell.cellY, aiMark);
     }
 
-    private Field.Cell findBestMove(Field field, char lastSimbolInGame) {
+    private Field.Cell findBestMove(Field field) {
 
         //TODO Алгоритм нахождения лучшего поля.
         // проверить, есть ли линия с уже заполненными 2 полями своего символа и свободной ячейкой в этой линии, занять её
