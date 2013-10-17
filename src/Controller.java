@@ -17,10 +17,24 @@ public class Controller {
         int cellX;
         int cellY;
         char cellMark;
+        boolean isCompOrHuman;
 
         gameField.eraseField();
         System.out.println();
         Scanner scanner = new Scanner(System.in);
+        System.out.println("Вы желаете чтобы за второго игрока ходил компьютер?(y,n): ");
+        String compOrHuman = scanner.next();
+        if (compOrHuman.equalsIgnoreCase("n")) {
+            isCompOrHuman = false;
+        } else {
+            isCompOrHuman = true;
+            System.out.println("Кто ходит первым?(h,c)");
+            compOrHuman = scanner.next();
+            if (compOrHuman.equalsIgnoreCase("c")) {
+                rulOfGame.makeAMove();
+            }
+        }
+
         while(true) {
             System.out.print("Введите номер горизонтали(1-3): ");
             while(scanner.hasNext()) {
@@ -50,6 +64,13 @@ public class Controller {
                     if (rulOfGame.isFinish()) {
                         System.out.println("Игра закончена!");
                         System.exit(0);
+                    }
+                    if (isCompOrHuman) {
+                        rulOfGame.makeAMove();
+                        if (rulOfGame.isFinish()) {
+                            System.out.println("Игра закончена!");
+                            System.exit(0);
+                        }
                     }
                     System.out.println();
                     System.out.print("Введите номер горизонтали(1-3): ");

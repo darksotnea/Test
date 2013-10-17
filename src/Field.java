@@ -1,8 +1,4 @@
-import com.intellij.util.containers.ArrayListSet;
-
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 public class Field {
     Cell cell = new Cell();
@@ -186,10 +182,6 @@ public class Field {
         Cell() {
             cellX=0;
             cellY=0;
-        }
-        Cell(int x, int y) {
-            this.cellX = x;
-            this.cellY = y;
         }
     }
 
@@ -378,8 +370,18 @@ public class Field {
         } else { return cell; }
     }
 
-    public Cell randomCell(char mark) {
-        //TODO возвращает рандомом координаты свободной ячейки
-        return new Cell();
+    public Cell randomFreeCell() {
+        ArrayList<Cell> massCells = new ArrayList<>();
+        Cell cellFree = new Cell();
+        for (int i = 0; i < FIELD_SIZE; i++) {
+            for (int j = 0; j < FIELD_SIZE; j++) {
+                if (field[i][j] == ' ') {
+                    cellFree.cellX = i;
+                    cellFree.cellY = j;
+                }
+                massCells.add(cellFree);
+            }
+        }
+        return massCells.get((int) (Math.random() * massCells.size()));
     }
 }

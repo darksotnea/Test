@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-
 public class RulesOfGameAndLogic {
 
     private Field gameField;
@@ -50,8 +48,6 @@ public class RulesOfGameAndLogic {
         // если дошло до сюда, то занять любую ячейку линии, в которой уже есть свой символ
         // если это первый ход, то рандомно занять центральную или любую угловую ячейку
 
-        //ArrayList<Field.Cell> cell = new ArrayList<Field.Cell>();
-
         field.cell.cellX = -1;
 
         field.cell = field.findLineWith2MarkAndReturnFreeCell(aiMark);
@@ -77,7 +73,7 @@ public class RulesOfGameAndLogic {
             return field.cell;
         }
 
-        return field.randomCell(playerMark);
+        return field.randomFreeCell();
     }
 
 }
