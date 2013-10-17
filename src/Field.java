@@ -1,4 +1,7 @@
+import java.util.ArrayList;
+
 public class Field {
+    Cell cell = new Cell();
 
     private static final int FIELD_SIZE = 3;
 
@@ -173,4 +176,30 @@ public class Field {
     private void showCell(int i, int i2) {
         System.out.print("[" + field[i][i2] + "]");
     }
+
+    // Класс для хранения и возврата координат cellX и cellY выбранного лучшего поля при поиске очередного хода
+    class Cell {
+        int cellX;
+        int cellY;
+        Cell() {
+            cellX=0;
+            cellY=0;
+        }
+    }
+
+    public Cell findLineWith2MarkAndReturnFreeCell(char mark) {
+        //TODO возвращает рандомом координаты свободной клетки в линии, где уже 2 поля одинаково помечены
+        return new Cell();
+    }
+
+    public Cell findLineWith1MarkAndReturnRandomFreeCell(char mark) {
+        //TODO возвращает рандомом координаты свободной клетки в линии, где уже 1 поле помечено, приоритет у поля, которое находится на пересечении двух таких линий
+         return new Cell();
+    }
+
+    public Cell randomCell() {
+        //TODO возвращает рандомом координаты свободной ячейки
+        return new Cell();
+    }
+
 }

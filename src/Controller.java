@@ -1,12 +1,12 @@
-import java.io.IOException;
 import java.util.Scanner;
 
 public class Controller {
 
     private Field gameField;
-    private RulesOfGame rulOfGame;
+    private RulesOfGameAndLogic rulOfGame;
+    boolean playWithComp = true;
 
-    public Controller(Field field, RulesOfGame rog) {
+    public Controller(Field field, RulesOfGameAndLogic rog) {
 
         this.gameField=field;
         this.rulOfGame=rog;
