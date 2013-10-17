@@ -35,7 +35,8 @@ public class RulesOfGameAndLogic {
         }
 
         Field.Cell bestCell = findBestMove(gameField);
-
+        System.out.println();
+        System.out.println("Компьютер ходит: ");
         gameField.setCell(bestCell.cellX, bestCell.cellY, aiMark);
     }
 

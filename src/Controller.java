@@ -17,26 +17,38 @@ public class Controller {
         int cellX;
         int cellY;
         char cellMark;
-        boolean isCompOrHuman;
+        boolean isCompPlay;
 
         gameField.eraseField();
         System.out.println();
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Вы желаете чтобы за второго игрока ходил компьютер?(y,n): ");
+        while (true) {
+            System.out.print("Чем будете заполнять?(нажмите 'x' или '0'(ноль)): ");
+            cellMark = scanner.next().toCharArray()[0];
+            if ((cellMark == 'x') | (cellMark == '0')) {
+                break;
+            } else {
+                System.out.println("Неправильный ввод! Введите 0 или x.");
+            }
+        }
+        System.out.println("Вы желаете чтобы за второго игрока ходил компьютер?(Нажмите Y(Yes) или N(No)): ");
         String compOrHuman = scanner.next();
         if (compOrHuman.equalsIgnoreCase("n")) {
-            isCompOrHuman = false;
+            isCompPlay = false;
         } else {
-            isCompOrHuman = true;
-            System.out.println("Кто ходит первым?(h,c)");
+            isCompPlay = true;
+            System.out.println("Кто ходит первым?(Нажмите H(Human) или C(Computer): ");
             compOrHuman = scanner.next();
             if (compOrHuman.equalsIgnoreCase("c")) {
+                gameField.setLastInput(cellMark);
                 rulOfGame.makeAMove();
+            } else {
+                gameField.showField();
             }
         }
 
         while(true) {
-            System.out.print("Введите номер горизонтали(1-3): ");
+            System.out.print("Введите номер вертикали(1-3): ");
             while(scanner.hasNext()) {
                 if(scanner.hasNextInt()) {
                     cellX = scanner.nextInt()-1;
@@ -47,7 +59,7 @@ public class Controller {
                     break;
                 }
 
-                System.out.print("Введите номер вертикали(1-3): ");
+                System.out.print("Введите номер горизонтали(1-3): ");
                 if (scanner.hasNextInt()) {
                     cellY = scanner.nextInt() - 1;
                     System.out.println();
@@ -56,28 +68,27 @@ public class Controller {
                     scanner.next();
                     break;
                 }
-
-                System.out.print("Чем заполнить?(нажмите 'x' или '0'): ");
-                cellMark = scanner.next().toCharArray()[0];
-                if ((cellMark == 'x') | (cellMark == '0')) {
-                    gameField.setCell(cellX, cellY, cellMark);
+                gameField.setCell(cellX, cellY, cellMark);
+                if (isCompPlay == false) {
+                    if (cellMark == 'x') {
+                        cellMark = '0';
+                    } else {
+                        cellMark = 'x';
+                    }
+                }
+                if (rulOfGame.isFinish()) {
+                    System.out.println("Игра закончена!");
+                    System.exit(0);
+                }
+                if (isCompPlay) {
+                    rulOfGame.makeAMove();
                     if (rulOfGame.isFinish()) {
                         System.out.println("Игра закончена!");
                         System.exit(0);
                     }
-                    if (isCompOrHuman) {
-                        rulOfGame.makeAMove();
-                        if (rulOfGame.isFinish()) {
-                            System.out.println("Игра закончена!");
-                            System.exit(0);
-                        }
-                    }
-                    System.out.println();
-                    System.out.print("Введите номер горизонтали(1-3): ");
-                } else {
-                    System.out.println("Неправильный ввод! Введите 0 или x.");
-                    break;
                 }
+                System.out.println();
+                System.out.print("Введите номер вертикали(1-3): ");
             }
         }
     }
