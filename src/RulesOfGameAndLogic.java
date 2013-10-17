@@ -77,7 +77,7 @@ public class RulesOfGameAndLogic {
             return field.cell;
         }
 
-        return field.randomCell();
+        return field.randomCell(playerMark);
     }
 
 }
