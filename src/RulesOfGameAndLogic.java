@@ -40,6 +40,8 @@ public class RulesOfGameAndLogic {
         gameField.setCell(bestCell.cellX, bestCell.cellY, aiMark);
     }
 
+    //TODO Сделать возможность брать ход обратно, а также просмотреть всю историю ходов.
+
     private Field.Cell findBestMove(Field field) {
 
         //TODO Алгоритм нахождения лучшего поля.
