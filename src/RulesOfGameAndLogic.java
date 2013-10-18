@@ -71,7 +71,7 @@ public class RulesOfGameAndLogic {
             return field.cell;
         }
 
-        field.cell = field.findLineWith1MarkAndReturnRandomFreeCell(aiMark);
+//        field.cell = field.findLineWith1MarkAndReturnRandomFreeCell(aiMark);
         if (field.cell.cellX != -1) {
             return field.cell;
         }
