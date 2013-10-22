@@ -183,16 +183,10 @@ public class Field {
             cellX=0;
             cellY=0;
         }
-
-        Cell(int cellX, int cellY) {
-            this.cellX = cellX;
-            this.cellY = cellY;
-        }
     }
 
     public Cell findLineWith2MarkAndReturnFreeCell(char mark) {
         //TODO улучшить, а то полный репит!!! Скорее всего выделить отдельную функцию, а то и больше.
-        //проверка горизонтали
         int sum = 0;
         ArrayList<Cell> massCells = new ArrayList<>();
         Cell cellFree = new Cell();
@@ -209,20 +203,37 @@ public class Field {
 
                 if (sum == FIELD_SIZE - 1) {
                     if (j == cellFree.cellY) {
-                        massCells.add(cellFree);
+                        boolean t = true;
+                        for (Cell c : massCells) {
+                            if ((c.cellX == cellFree.cellX) & (c.cellY == cellFree.cellY)) {
+                                t = false;
+                                break;
+                            }
+                        }
+                        if (t) {
+                            massCells.add(cellFree);
+                            cellFree = new Cell();
+                        }
                     } else {
                         cellFree.cellX++;
-                        massCells.add(cellFree);
+                        boolean t = true;
+                        for (Cell c : massCells) {
+                            if ((c.cellX == cellFree.cellX) & (c.cellY == cellFree.cellY)) {
+                                t = false;
+                                break;
+                            }
+                        }
+                        if (t) {
+                            massCells.add(cellFree);
+                            cellFree = new Cell();
+                        }
                     }
                 }
             }
             sum=0;
         }
 
-        //проверка вертикали
         sum = 0;
-        cellFree.cellX=0;
-        cellFree.cellY=0;
         for (int i = 0; i < FIELD_SIZE; i++) {
             for (int j = 0; j < FIELD_SIZE; j++) {
                 if (field[i][j] == ' ') {
@@ -245,6 +256,7 @@ public class Field {
                         }
                         if (t) {
                             massCells.add(cellFree);
+
                         }
                     } else {
                         cellFree.cellY++;
@@ -264,15 +276,14 @@ public class Field {
             sum=0;
         }
 
-        //проверка нисходящей диагонали
         sum = 0;
-        cellFree.cellX=0;
-        cellFree.cellY=0;
+        boolean isLineHaveEmptyCell=false;
         for (int i = 0, j = 0; i < FIELD_SIZE; i++, j++) {
 
             if (field[i][j] == ' ') {
                 cellFree.cellX = i;
                 cellFree.cellY = j;
+                isLineHaveEmptyCell = true;
             }
 
             if (field[i][j] == mark) {
@@ -280,44 +291,49 @@ public class Field {
             }
 
             if (sum == FIELD_SIZE - 1) {
-                if (i != FIELD_SIZE -2) {
-                    boolean t = true;
-                    for (Cell c : massCells) {
-                        if ((c.cellX == cellFree.cellX) & (c.cellY == cellFree.cellY)) {
-                            t = false;
-                            break;
+                if (i != FIELD_SIZE - 2) {
+                    if (isLineHaveEmptyCell == true) {
+                        boolean t = true;
+                        for (Cell c : massCells) {
+                            if ((c.cellX == cellFree.cellX) & (c.cellY == cellFree.cellY)) {
+                                t = false;
+                                break;
+                            }
                         }
-                    }
-                    if (t) {
-                        massCells.add(cellFree);
+                        if (t) {
+                            massCells.add(cellFree);
+                            cellFree = new Cell();
+                        }
                     }
                 } else {
-                    cellFree.cellX++;
-                    cellFree.cellY++;
-                    boolean t = true;
-                    for (Cell c : massCells) {
-                        if ((c.cellX == cellFree.cellX) & (c.cellY == cellFree.cellY)) {
-                            t = false;
-                            break;
+                    cellFree.cellX = i + 1;
+                    cellFree.cellY = j + 1;
+                    boolean t = false;
+                    if (getCell(cellFree.cellX, cellFree.cellY) == ' ') {
+                        t = true;
+                        for (Cell c : massCells) {
+                            if ((c.cellX == cellFree.cellX) & (c.cellY == cellFree.cellY)) {
+                                t = false;
+                                break;
+                            }
                         }
                     }
                     if (t) {
                         massCells.add(cellFree);
+                        cellFree = new Cell();
                     }
                 }
             }
         }
 
-
-        //проверка восходящей диагонали
         sum = 0;
-        cellFree.cellX=0;
-        cellFree.cellY=0;
+        isLineHaveEmptyCell = false;
         for (int i = 2, j = 0; j < FIELD_SIZE; i--, j++) {
 
             if (field[i][j] == ' ') {
                 cellFree.cellX = i;
                 cellFree.cellY = j;
+                isLineHaveEmptyCell=true;
             }
 
             if (field[i][j] == mark) {
@@ -326,28 +342,34 @@ public class Field {
 
             if (sum == FIELD_SIZE - 1) {
                 if (i != FIELD_SIZE -2) {
-                    boolean t = true;
-                    for (Cell c : massCells) {
-                        if ((c.cellX == cellFree.cellX) & (c.cellY == cellFree.cellY)) {
-                            t = false;
-                            break;
+                    if (isLineHaveEmptyCell == true) {
+                        boolean t = true;
+                        for (Cell c : massCells) {
+                            if ((c.cellX == cellFree.cellX) & (c.cellY == cellFree.cellY)) {
+                                t = false;
+                                break;
+                            }
                         }
-                    }
-                    if (t) {
-                        massCells.add(cellFree);
+                        if (t) {
+                            massCells.add(cellFree);
+                            cellFree = new Cell();
+                        }
                     }
                 } else {
-                    cellFree.cellX--;
-                    cellFree.cellY++;
-                    boolean t = true;
-                    for (Cell c : massCells) {
-                        if ((c.cellX == cellFree.cellX) & (c.cellY == cellFree.cellY)) {
-                            t = false;
-                            break;
+                    cellFree.cellX = i--;
+                    cellFree.cellY = j++;
+                    boolean t = false;
+                    if (getCell(cellFree.cellX, cellFree.cellY) == ' ') {
+                        for (Cell c : massCells) {
+                            if ((c.cellX == cellFree.cellX) & (c.cellY == cellFree.cellY)) {
+                                t = false;
+                                break;
+                            }
                         }
-                    }
-                    if (t) {
-                        massCells.add(cellFree);
+                        if (t) {
+                            massCells.add(cellFree);
+                            cellFree = new Cell();
+                        }
                     }
                 }
             }
@@ -359,13 +381,9 @@ public class Field {
     }
 
     public Cell findLineWith1MarkAndReturnRandomFreeCell(char mark) {
+        //TODO возвращает рандомом координаты свободной клетки в линии, где уже 1 поле помечено, приоритет у поля, которое находится на пересечении двух таких линий
 
-        //TODO findLineWith1MarkAndReturnRandomFreeCell улучшить, для начала обычный рандом по пустым ячейкам
-        // возвращает рандомом координаты свободной клетки в линии, где уже 1 поле помечено, приоритет у поля, которое находится на пересечении двух таких линий
-        // нужно чтобы метод при обнаружении чекал другие два поля и если они пустые
-        // заносил их в возможные ходы, возможно стоит искать маркнутую ячейку, а потом проверять все
-        // поля по диагонали, вертикали и горизонтали и если они равны ' ' то заносить из в массив.
-
+        int sum = 0;
         ArrayList<Cell> massCells = new ArrayList<>();
         Cell cellFree = new Cell();
         for (int i = 0; i < FIELD_SIZE; i++) {
@@ -373,9 +391,17 @@ public class Field {
                 if (field[i][j] == ' ') {
                     cellFree.cellX = i;
                     cellFree.cellY = j;
+                }
+
+                if (field[i][j] == mark) {
+                    sum++;
+                }
+
+                if (sum == FIELD_SIZE - 1) {
                     massCells.add(cellFree);
                 }
             }
+            sum=0;
         }
         if (massCells.size() > 0) {
             return massCells.get((int) (Math.random() * massCells.size()));
@@ -384,19 +410,16 @@ public class Field {
 
     public Cell randomFreeCell() {
         ArrayList<Cell> massCells = new ArrayList<>();
+        Cell cellFree = new Cell();
         for (int i = 0; i < FIELD_SIZE; i++) {
             for (int j = 0; j < FIELD_SIZE; j++) {
                 if (field[i][j] == ' ') {
-                    Cell cellFree = new Cell();
                     cellFree.cellX = i;
                     cellFree.cellY = j;
-                    System.out.println("CellFree: " + cellFree.cellX + " " + cellFree.cellY);
-                    massCells.add(cellFree);
                 }
+                massCells.add(cellFree);
             }
         }
-        int a = (int) (Math.random() * massCells.size());
-        System.out.println("Size = " + massCells.size() + " . Рандом: " + a);
         return massCells.get((int) (Math.random() * massCells.size()));
     }
 }

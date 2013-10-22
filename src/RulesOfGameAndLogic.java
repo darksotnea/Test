@@ -3,6 +3,9 @@ public class RulesOfGameAndLogic {
     private Field gameField;
     char aiMark;
     char playerMark;
+    char playerMarkH;
+    char aiMarkH;
+
 
 
     public RulesOfGameAndLogic(Field field) {
@@ -24,14 +27,18 @@ public class RulesOfGameAndLogic {
         return false;
     }
 
-    public void makeAMove() {
+    void makeAMove() {
 
         if (gameField.getLastInput() == 'x') {
             playerMark = 'x';
+            playerMarkH = 'X';
             aiMark = '0';
+            aiMarkH = '0';
         } else {
             playerMark = '0';
+            playerMarkH = '0';
             aiMark = 'x';
+            aiMarkH = 'X';
         }
 
         Field.Cell bestCell = findBestMove(gameField);
@@ -39,8 +46,6 @@ public class RulesOfGameAndLogic {
         System.out.println("Компьютер ходит: ");
         gameField.setCell(bestCell.cellX, bestCell.cellY, aiMark);
     }
-
-    //TODO Сделать возможность брать ход обратно, а также просмотреть всю историю ходов.
 
     private Field.Cell findBestMove(Field field) {
 
@@ -53,12 +58,12 @@ public class RulesOfGameAndLogic {
 
         field.cell.cellX = -1;
 
-        field.cell = field.findLineWith2MarkAndReturnFreeCell(aiMark);
+        field.cell = field.findLineWith2MarkAndReturnFreeCell(aiMarkH);
         if (field.cell.cellX != -1) {
             return field.cell;
         }
 
-        field.cell = field.findLineWith2MarkAndReturnFreeCell(playerMark);
+        field.cell = field.findLineWith2MarkAndReturnFreeCell(playerMarkH);
         if (field.cell.cellX != -1) {
             return field.cell;
         }
@@ -71,7 +76,7 @@ public class RulesOfGameAndLogic {
             return field.cell;
         }
 
-//        field.cell = field.findLineWith1MarkAndReturnRandomFreeCell(aiMark);
+        field.cell = field.findLineWith1MarkAndReturnRandomFreeCell(aiMarkH);
         if (field.cell.cellX != -1) {
             return field.cell;
         }
