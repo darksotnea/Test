@@ -4,7 +4,6 @@ public class Controller {
 
     private Field gameField;
     private RulesOfGameAndLogic rulOfGame;
-    boolean playWithComp = true;
 
     public Controller(Field field, RulesOfGameAndLogic rog) {
 
@@ -32,18 +31,30 @@ public class Controller {
             }
         }
         System.out.println("Вы желаете чтобы за второго игрока ходил компьютер?(Нажмите Y(Yes) или N(No)): ");
-        String compOrHuman = scanner.next();
-        if (compOrHuman.equalsIgnoreCase("n")) {
-            isCompPlay = false;
-        } else {
-            isCompPlay = true;
-            System.out.println("Кто ходит первым?(Нажмите H(Human) или C(Computer): ");
-            compOrHuman = scanner.next();
-            if (compOrHuman.equalsIgnoreCase("c")) {
-                gameField.setLastInput(cellMark);
-                rulOfGame.makeAMove();
+        while(true) {
+            String compOrHuman = scanner.next();
+            if (compOrHuman.equalsIgnoreCase("n")) {
+                isCompPlay = false;
+                break;
+            } else if(compOrHuman.equalsIgnoreCase("y")){
+                isCompPlay = true;
+                System.out.println("Кто ходит первым?(Нажмите H(Human) или C(Computer): ");
+                while (true) {
+                    compOrHuman = scanner.next();
+                    if (compOrHuman.equalsIgnoreCase("c")) {
+                        gameField.setLastInput(cellMark);
+                        rulOfGame.makeAMove();
+                        break;
+                    } else if (compOrHuman.equalsIgnoreCase("h")) {
+                        gameField.showField();
+                        break;
+                    } else {
+                        System.out.println("Неправильный ввод! Введите H или C.");
+                    }
+                }
+                break;
             } else {
-                gameField.showField();
+                System.out.println("Неправильный ввод данных! Введите Y или N!");
             }
         }
 

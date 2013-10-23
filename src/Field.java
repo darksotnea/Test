@@ -22,10 +22,6 @@ public class Field {
         this.lastInput = lastInput;
     }
 
-    private boolean proverkaVvoda(int cX, int cY) {
-        return cX < 0 | cX >= FIELD_SIZE | cY < 0 | cY >= FIELD_SIZE;
-    }
-
     public boolean isFilled() {
         char znachenieMark=DEFAULT_CELL_VALUE;
         for (int i = 0; i < FIELD_SIZE; i++) {
@@ -112,11 +108,12 @@ public class Field {
 
 
     public void setCell(int cellX, int cellY, char mark) {
-        if (proverkaVvoda(cellX, cellY)) {
+        if (cellX < 0 | cellX >= FIELD_SIZE | cellY < 0 | cellY >= FIELD_SIZE) {
             System.out.println("Для ввода допустимы лишь 'x' и '0', а также координаты должны быть в диапазоне 1-3 включительно! Начните заново!");
             eraseField();
             return;
         }
+
         if (field[cellX][cellY] != DEFAULT_CELL_VALUE) {
             System.out.println("Это поле уже помечено, введите другие координаты.");
             showField();
@@ -129,15 +126,14 @@ public class Field {
                 showField();
                 return;
             }
-        } else {
-            lastInput = mark;}
+        }
+        lastInput = mark;
 
         if (mark == FIRST_PLAYER_MARK) {
             field[cellX][cellY] = 'X';
         } else {
             field[cellX][cellY] = '0';
         }
-        lastInput = mark;
         showField();
     }
 
@@ -175,13 +171,13 @@ public class Field {
         System.out.print("[" + field[i][i2] + "]");
     }
 
-    // Класс для хранения и возврата координат cellX и cellY выбранного лучшего поля при поиске очередного хода AI
+    // Класс Cell для хранения и возврата координат cellX и cellY выбранного лучшего поля при поиске очередного хода AI
     class Cell {
         int cellX;
         int cellY;
         Cell() {
-            cellX=0;
-            cellY=0;
+            cellX=-1;
+            cellY=-1;
         }
     }
 
@@ -190,6 +186,8 @@ public class Field {
         int sum = 0;
         ArrayList<Cell> massCells = new ArrayList<>();
         Cell cellFree = new Cell();
+
+        //проверка горизонталей
         for (int j = 0; j < FIELD_SIZE; j++) {
             for (int i = 0; i < FIELD_SIZE; i++) {
                 if (field[i][j] == ' ') {
@@ -201,7 +199,7 @@ public class Field {
                     sum++;
                 }
 
-                if (sum == FIELD_SIZE - 1) {
+                if (sum == 2) {
                     if (j == cellFree.cellY) {
                         boolean t = true;
                         for (Cell c : massCells) {
@@ -214,8 +212,8 @@ public class Field {
                             massCells.add(cellFree);
                             cellFree = new Cell();
                         }
-                    } else {
-                        cellFree.cellX++;
+                    } else if ((j == 1) && (i != 2) &&(field[i +1][j] == ' ')) {
+                        cellFree.cellX = i + 1;
                         boolean t = true;
                         for (Cell c : massCells) {
                             if ((c.cellX == cellFree.cellX) & (c.cellY == cellFree.cellY)) {
@@ -227,12 +225,14 @@ public class Field {
                             massCells.add(cellFree);
                             cellFree = new Cell();
                         }
+                        i++;
                     }
                 }
             }
             sum=0;
         }
 
+        //проверка вертикалей
         sum = 0;
         for (int i = 0; i < FIELD_SIZE; i++) {
             for (int j = 0; j < FIELD_SIZE; j++) {
@@ -256,10 +256,10 @@ public class Field {
                         }
                         if (t) {
                             massCells.add(cellFree);
-
+                            cellFree = new Cell();
                         }
-                    } else {
-                        cellFree.cellY++;
+                    } else if ((i == 1) && (j!=2) && (field[i][j + 1] == ' ')) {
+                        cellFree.cellY = j + 1;
                         boolean t = true;
                         for (Cell c : massCells) {
                             if ((c.cellX == cellFree.cellX) & (c.cellY == cellFree.cellY)) {
@@ -269,108 +269,103 @@ public class Field {
                         }
                         if (t) {
                             massCells.add(cellFree);
+                            cellFree = new Cell();
                         }
+                        j++;
                     }
                 }
             }
             sum=0;
         }
 
+        //проверка нисходящей диагонали
         sum = 0;
-        boolean isLineHaveEmptyCell=false;
         for (int i = 0, j = 0; i < FIELD_SIZE; i++, j++) {
 
             if (field[i][j] == ' ') {
                 cellFree.cellX = i;
                 cellFree.cellY = j;
-                isLineHaveEmptyCell = true;
             }
 
             if (field[i][j] == mark) {
                 sum++;
             }
 
-            if (sum == FIELD_SIZE - 1) {
-                if (i != FIELD_SIZE - 2) {
-                    if (isLineHaveEmptyCell == true) {
-                        boolean t = true;
-                        for (Cell c : massCells) {
-                            if ((c.cellX == cellFree.cellX) & (c.cellY == cellFree.cellY)) {
-                                t = false;
-                                break;
-                            }
-                        }
-                        if (t) {
-                            massCells.add(cellFree);
-                            cellFree = new Cell();
-                        }
-                    }
-                } else {
-                    cellFree.cellX = i + 1;
-                    cellFree.cellY = j + 1;
-                    boolean t = false;
-                    if (getCell(cellFree.cellX, cellFree.cellY) == ' ') {
-                        t = true;
-                        for (Cell c : massCells) {
-                            if ((c.cellX == cellFree.cellX) & (c.cellY == cellFree.cellY)) {
-                                t = false;
-                                break;
-                            }
+            if (sum == 2) {
+                if ((i != 1) && ((cellFree.cellX == i-1 & cellFree.cellY == j-1) | (cellFree.cellX == i-2 & cellFree.cellY == j-2))) {
+                    boolean t = true;
+                    for (Cell c : massCells) {
+                        if ((c.cellX == cellFree.cellX) & (c.cellY == cellFree.cellY)) {
+                            t = false;
+                            break;
                         }
                     }
                     if (t) {
                         massCells.add(cellFree);
                         cellFree = new Cell();
                     }
+                } else if ((i == 1) && (field[i+1][j+1] == ' ')) {
+                    cellFree.cellX = i + 1;
+                    cellFree.cellY = j + 1;
+                    boolean t = true;
+                    for (Cell c : massCells) {
+                        if ((c.cellX == cellFree.cellX) & (c.cellY == cellFree.cellY)) {
+                            t = false;
+                            break;
+                        }
+                    }
+                    if (t) {
+                        massCells.add(cellFree);
+                        cellFree = new Cell();
+                    }
+                    i++;
+                    j++;
                 }
             }
         }
 
+        //проверка восходящей диагонали
         sum = 0;
-        isLineHaveEmptyCell = false;
         for (int i = 2, j = 0; j < FIELD_SIZE; i--, j++) {
 
             if (field[i][j] == ' ') {
                 cellFree.cellX = i;
                 cellFree.cellY = j;
-                isLineHaveEmptyCell=true;
             }
 
             if (field[i][j] == mark) {
                 sum++;
             }
 
-            if (sum == FIELD_SIZE - 1) {
-                if (i != FIELD_SIZE -2) {
-                    if (isLineHaveEmptyCell == true) {
-                        boolean t = true;
-                        for (Cell c : massCells) {
-                            if ((c.cellX == cellFree.cellX) & (c.cellY == cellFree.cellY)) {
-                                t = false;
-                                break;
-                            }
-                        }
-                        if (t) {
-                            massCells.add(cellFree);
-                            cellFree = new Cell();
+            if (sum == 2) {
+                if ((i != 1) && ((cellFree.cellX == i+1 & cellFree.cellY == j-1) | (cellFree.cellX == i+2 & cellFree.cellY == j-2))) {
+                    boolean t = true;
+                    for (Cell c : massCells) {
+                        if ((c.cellX == cellFree.cellX) & (c.cellY == cellFree.cellY)) {
+                            t = false;
+                            break;
                         }
                     }
-                } else {
-                    cellFree.cellX = i--;
-                    cellFree.cellY = j++;
-                    boolean t = false;
-                    if (getCell(cellFree.cellX, cellFree.cellY) == ' ') {
-                        for (Cell c : massCells) {
-                            if ((c.cellX == cellFree.cellX) & (c.cellY == cellFree.cellY)) {
-                                t = false;
-                                break;
-                            }
-                        }
-                        if (t) {
-                            massCells.add(cellFree);
-                            cellFree = new Cell();
+                    if (t) {
+                        massCells.add(cellFree);
+                        cellFree = new Cell();
+                    }
+                } else if ((i == 1) && (field[i-1][j+1] == ' ')) {
+                    cellFree.cellX = i - 1;
+                    cellFree.cellY = j + 1;
+                    boolean t = true;
+                    for (Cell c : massCells) {
+                        if ((c.cellX == cellFree.cellX) & (c.cellY == cellFree.cellY)) {
+                            t = false;
+                            break;
                         }
                     }
+                    if (t) {
+                        massCells.add(cellFree);
+                        cellFree = new Cell();
+                    }
+                    i--;
+                    j++;
                 }
             }
         }
@@ -399,6 +394,7 @@ public class Field {
 
                 if (sum == FIELD_SIZE - 1) {
                     massCells.add(cellFree);
+                    cellFree = new Cell();
                 }
             }
             sum=0;
@@ -416,10 +412,12 @@ public class Field {
                 if (field[i][j] == ' ') {
                     cellFree.cellX = i;
                     cellFree.cellY = j;
+                    massCells.add(cellFree);
+                    cellFree = new Cell();
                 }
-                massCells.add(cellFree);
             }
         }
-        return massCells.get((int) (Math.random() * massCells.size()));
+        Cell cellTest1 = massCells.get((int) (Math.random() * massCells.size()));
+        return cellTest1;
     }
 }

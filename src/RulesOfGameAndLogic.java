@@ -81,7 +81,8 @@ public class RulesOfGameAndLogic {
             return field.cell;
         }
 
-        return field.randomFreeCell();
+        Field.Cell cellTest = field.randomFreeCell();
+        return cellTest;
     }
 
 }
