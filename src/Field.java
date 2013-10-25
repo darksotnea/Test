@@ -22,6 +22,13 @@ public class Field {
         this.lastInput = lastInput;
     }
 
+    char getLastInputH() {
+        if (lastInput == FIRST_PLAYER_MARK) {
+            return 'X';
+        }
+        return '0';
+    }
+
     public boolean isFilled() {
         char znachenieMark=DEFAULT_CELL_VALUE;
         for (int i = 0; i < FIELD_SIZE; i++) {
