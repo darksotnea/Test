@@ -138,7 +138,7 @@ public class TestField {
 
         rog.makeAMove();
 
-        assertEquals("Проверка на заполнение последней ячейки в строке, при уже двух помеченных ячейках той же отметкой.",true,field.getCell(randI, j) == field.getLastInput());
+        assertEquals("Проверка на заполнение последней ячейки в строке, при уже двух помеченных ячейках той же отметкой.",true,field.getCell(randI, j) == field.getLastInputH());
         assertEquals("Проверка на заполнение строки после заполнения последней из трёх ячеек таким же символом.",true,field.isFilledLine());
     }
 
@@ -170,7 +170,7 @@ public class TestField {
 
         rog.makeAMove();
 
-        assertEquals("Проверка на заполнение последней ячейки в строке, при уже двух помеченных ячейках противоположной отметкой.",true,field.getCell(randI, j) == field.getLastInput());
+        assertEquals("Проверка на заполнение последней ячейки в строке, при уже двух помеченных ячейках противоположной отметкой.",true,field.getCell(randI, j) == field.getLastInputH());
         assertEquals("Проверка на заполнение строки после заполнения последней из трёх ячеек противоположным символом.",false,field.isFilledLine());
     }
 
@@ -194,7 +194,7 @@ public class TestField {
 
         rog.makeAMove();
 
-        assertEquals("Проверка на заполнение последней ячейки в столбцы, при уже двух помеченных ячейках той же отметкой.",true,field.getCell(i, randJ) == field.getLastInput());
+        assertEquals("Проверка на заполнение последней ячейки в столбцы, при уже двух помеченных ячейках той же отметкой.",true,field.getCell(i, randJ) == field.getLastInputH());
         assertEquals("Проверка на заполнение столбца после заполнения последней из трёх ячеек таким же символом.",true,field.isFilledLine());
     }
 
@@ -226,7 +226,7 @@ public class TestField {
 
         rog.makeAMove();
 
-        assertEquals("Проверка на заполнение последней ячейки в столбце, при уже двух помеченных ячейках противоположной отметкой.",true,field.getCell(i, randJ) == field.getLastInput());
+        assertEquals("Проверка на заполнение последней ячейки в столбце, при уже двух помеченных ячейках противоположной отметкой.",true,field.getCell(i, randJ) == field.getLastInputH());
         assertEquals("Проверка на заполнение столбца после заполнения последней из трёх ячеек противоположным символом.",false,field.isFilledLine());
     }
 
@@ -250,7 +250,7 @@ public class TestField {
 
         rog.makeAMove();
 
-        assertEquals("Проверка на заполнение нисходящей диагонали после заполнения первой или второй ячейки таким же символом.",true, field.getCell(randINotSetCell, randINotSetCell) == field.getLastInput());
+        assertEquals("Проверка на заполнение нисходящей диагонали после заполнения первой и второй ячейки таким же символом.",true, field.getCell(randINotSetCell, randINotSetCell) == field.getLastInputH());
         assertEquals("Проверка на заполнение нисходящей диагонали после заполнения последней из трёх ячеек таким же символом.",true,field.isFilledLine());
 
         field.eraseField();
@@ -270,7 +270,7 @@ public class TestField {
         rog.makeAMove();
 
 
-        assertEquals("Проверка на заполнение последней ячейки в нисходящей диагонали, при уже двух первых помеченных ячейках той же отметкой.",true, field.getCell(2, 2) == field.getLastInput());
+        assertEquals("Проверка на заполнение последней ячейки в нисходящей диагонали, при уже двух первых помеченных ячейках той же отметкой.",true, field.getCell(2, 2) == field.getLastInputH());
         assertEquals("Проверка на заполнение нисходящей диагонали после заполнения последней из трёх ячеек таким же символом.",true,field.isFilledLine());
     }
 
@@ -300,7 +300,7 @@ public class TestField {
 
         rog.makeAMove();
 
-        assertEquals("Проверка на заполнение последней пустой ячейки (первой или второй) нисходящей диагонали противоположным символом.",true, field.getCell(randINotSetCell, randINotSetCell) == field.getLastInput());
+        assertEquals("Проверка на заполнение последней пустой ячейки (первой или второй) нисходящей диагонали противоположным символом.",true, field.getCell(randINotSetCell, randINotSetCell) == field.getLastInputH());
         assertEquals("Проверка на заполнение нисходящей диагонали после заполнения последней ячейки противоположным символом.",false,field.isFilledLine());
 
         field.eraseField();
@@ -325,7 +325,7 @@ public class TestField {
 
         rog.makeAMove();
 
-        assertEquals("Проверка на заполнение третьей ячейки в нисходящей диагонали, при уже двух первых помеченных ячейках противоположной отметкой.",true, field.getCell(randINotSetCell, randINotSetCell) == field.getLastInput());
+        assertEquals("Проверка на заполнение третьей ячейки в нисходящей диагонали, при уже двух первых помеченных ячейках противоположной отметкой.",true, field.getCell(2,2) == field.getLastInputH());
         assertEquals("Проверка на заполнение нисходящей диагонали после заполнения последней из трёх ячеек противоположной отметкой.",false,field.isFilledLine());
     }
 
@@ -337,7 +337,7 @@ public class TestField {
         int rand = (int)(Math.random()*2);
         int randINotSetCell = (int)(Math.random()*2);
 
-        for (int i = 0, j = 3; i < 3; i++, j--) {
+        for (int i = 0, j = 2; i < 3; i++, j--) {
             if ((rand == 0)&(randINotSetCell != i)) {
                 field.setCell(i, j, ZNACHENIE_POLYA_0);
                 field.setLastInput(ZNACHENIE_POLYA_X);
@@ -349,14 +349,14 @@ public class TestField {
 
         rog.makeAMove();
 
-        assertEquals("Проверка на заполнение восходящей диагонали после заполнения первой или второй ячейки таким же символом.",true, field.getCell(randINotSetCell, randINotSetCell) == field.getLastInput());
+        assertEquals("Проверка на заполнение восходящей диагонали после заполнения первой или второй ячейки таким же символом.",true, field.getCell(randINotSetCell, 2-randINotSetCell) == field.getLastInputH());
         assertEquals("Проверка на заполнение восходящей диагонали после заполнения последней из трёх ячеек таким же символом.",true,field.isFilledLine());
 
         field.eraseField();
         field.setLastInput(' ');
         rand = (int)(Math.random()*2);
 
-        for (int i = 0, j = 3; i < 3; i++, j--) {
+        for (int i = 0, j = 2; i < 3; i++, j--) {
             if ((rand == 0) & ( i!=2 )) {
                 field.setCell(i, j, ZNACHENIE_POLYA_0);
                 field.setLastInput(ZNACHENIE_POLYA_X);
@@ -369,7 +369,7 @@ public class TestField {
         rog.makeAMove();
 
 
-        assertEquals("Проверка на заполнение последней ячейки в восходящей диагонали, при уже двух первых помеченных ячейках той же отметкой.",true, field.getCell(2, 2) == field.getLastInput());
+        assertEquals("Проверка на заполнение последней ячейки в восходящей диагонали, при уже двух первых помеченных ячейках той же отметкой.",true, field.getCell(2, 0) == field.getLastInputH());
         assertEquals("Проверка на заполнение восходящей диагонали после заполнения последней из трёх ячеек таким же символом.",true,field.isFilledLine());
     }
 
@@ -381,7 +381,7 @@ public class TestField {
         int rand = (int)(Math.random()*2);
         int randINotSetCell = (int)(Math.random()*2);
 
-        for (int i = 0, j = 3; i < 3; i++, j--) {
+        for (int i = 0, j = 2; i < 3; i++, j--) {
             if ((rand == 0)&(randINotSetCell != i)) {
                 field.setCell(i, j, ZNACHENIE_POLYA_0);
                 field.setLastInput(ZNACHENIE_POLYA_X);
@@ -399,14 +399,14 @@ public class TestField {
 
         rog.makeAMove();
 
-        assertEquals("Проверка на заполнение последней пустой ячейки (первой или второй) восходящей диагонали противоположным символом.",true, field.getCell(randINotSetCell, randINotSetCell) == field.getLastInput());
+        assertEquals("Проверка на заполнение последней пустой ячейки (первой или второй) восходящей диагонали противоположным символом.",true, field.getCell(randINotSetCell, 2-randINotSetCell) == field.getLastInputH());
         assertEquals("Проверка на заполнение восходящей диагонали после заполнения последней ячейки противоположным символом.",false,field.isFilledLine());
 
         field.eraseField();
         field.setLastInput(' ');
         rand = (int)(Math.random()*2);
 
-        for (int i = 0, j = 3; i < 3; i++, j--) {
+        for (int i = 0, j = 2; i < 3; i++, j--) {
             if ((rand == 0) & ( i!=2 )) {
                 field.setCell(i, j, ZNACHENIE_POLYA_0);
                 field.setLastInput(ZNACHENIE_POLYA_X);
@@ -424,7 +424,7 @@ public class TestField {
 
         rog.makeAMove();
 
-        assertEquals("Проверка на заполнение третьей ячейки в восходящей диагонали, при уже двух первых помеченных ячейках противоположной отметкой.",true, field.getCell(randINotSetCell, randINotSetCell) == field.getLastInput());
+        assertEquals("Проверка на заполнение третьей ячейки в восходящей диагонали, при уже двух первых помеченных ячейках противоположной отметкой.",true, field.getCell(2, 0) == field.getLastInputH());
         assertEquals("Проверка на заполнение восходящей диагонали после заполнения последней из трёх ячеек противоположной отметкой.",false,field.isFilledLine());
     }
 }
