@@ -35,6 +35,7 @@ public class Controller {
             String compOrHuman = scanner.next();
             if (compOrHuman.equalsIgnoreCase("n")) {
                 isCompPlay = false;
+                gameField.showField();
                 break;
             } else if(compOrHuman.equalsIgnoreCase("y")){
                 isCompPlay = true;
@@ -61,8 +62,37 @@ public class Controller {
         while(true) {
             System.out.print("Введите номер вертикали(1-3): ");
             while(scanner.hasNext()) {
-                if(scanner.hasNextInt()) {
-                    cellX = scanner.nextInt()-1;
+                while (true) {
+                    if(scanner.hasNext("r")) {
+                        if(isCompPlay & gameField.lastCells.size() >= 2) {
+                            for(int i = 0; i < 2; i++) {
+                                int num = gameField.lastCells.size()-1;
+                                Field.Cell lastCell = gameField.lastCells.get(num);
+                                gameField.setCell(lastCell.cellX, lastCell.cellY, ' ');
+                                gameField.lastCells.remove(num);
+                            }
+                            System.out.println("Если вы хотите отмотать ещё 1 ход, то нажмите ещё раз 'r', если хотите продолжить игру введите номер вертикали(1-3):");
+                        } else if(!isCompPlay & gameField.lastCells.size() >= 1) {
+                            int num = gameField.lastCells.size()-1;
+                            Field.Cell lastCell = gameField.lastCells.get(num);
+                            gameField.setCell(lastCell.cellX, lastCell.cellY, ' ');
+                            gameField.lastCells.remove(num);
+                            cellMark = gameField.getLastInput();
+                            gameField.reverseLastInputMark();
+                            System.out.println("Если вы хотите отмотать ещё 1 ход, то нажмите ещё раз 'r', если хотите продолжить игру введите номер вертикали(1-3):");
+                        } else {
+                            System.out.println("Предыдущих ходов не было.");
+                            gameField.showField();
+                            break;
+                        }
+                    } else {
+                        break;
+                    }
+                    scanner.next();
+                }
+
+                if (scanner.hasNextInt()) {
+                    cellX = scanner.nextInt() - 1;
                     System.out.println();
                 } else {
                     System.out.println("Неправильный ввод! Должна быть цифра! Введите ещё раз.");
@@ -71,6 +101,7 @@ public class Controller {
                 }
 
                 System.out.print("Введите номер горизонтали(1-3): ");
+
                 if (scanner.hasNextInt()) {
                     cellY = scanner.nextInt() - 1;
                     System.out.println();
@@ -79,7 +110,9 @@ public class Controller {
                     scanner.next();
                     break;
                 }
+
                 gameField.setCell(cellX, cellY, cellMark);
+
                 if (isCompPlay == false) {
                     if (cellMark == 'x') {
                         cellMark = '0';
@@ -87,6 +120,7 @@ public class Controller {
                         cellMark = 'x';
                     }
                 }
+
                 if (rulOfGame.isFinish()) {
                     System.out.println("Игра закончена!");
                     System.exit(0);
@@ -99,7 +133,7 @@ public class Controller {
                     }
                 }
                 System.out.println();
-                System.out.print("Введите номер вертикали(1-3): ");
+                System.out.print("Введите номер вертикали(1-3), если хотите отменить ход, нажмите 'r': ");
             }
         }
     }

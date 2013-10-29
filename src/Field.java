@@ -13,6 +13,7 @@ public class Field {
 
     private final char FIRST_PLAYER_MARK = 'x';
 
+    ArrayList<Cell> lastCells = new ArrayList();
 
     char getLastInput() {
         return lastInput;
@@ -113,6 +114,13 @@ public class Field {
         return false;
     }
 
+    public void reverseLastInputMark() {
+        if (lastInput == FIRST_PLAYER_MARK) {
+             lastInput = '0';
+        } else if (lastInput == '0') {
+            lastInput = 'x';
+        }
+    }
 
     public void setCell(int cellX, int cellY, char mark) {
         if (cellX < 0 | cellX >= FIELD_SIZE | cellY < 0 | cellY >= FIELD_SIZE) {
@@ -121,25 +129,31 @@ public class Field {
             return;
         }
 
-        if (field[cellX][cellY] != DEFAULT_CELL_VALUE) {
+        if ((field[cellX][cellY] != DEFAULT_CELL_VALUE) & mark != ' ') {
             System.out.println("Это поле уже помечено, введите другие координаты.");
             showField();
             return;
         }
 
-        if (lastInput != DEFAULT_CELL_VALUE) {
+        if (lastInput != DEFAULT_CELL_VALUE){
             if (lastInput == mark) {
                 System.out.println("Этот игрок уже ходил, сейчас должен ходить другой игрок.");
                 showField();
                 return;
             }
         }
-        lastInput = mark;
 
         if (mark == FIRST_PLAYER_MARK) {
             field[cellX][cellY] = 'X';
-        } else {
+        } else if (mark == '0') {
             field[cellX][cellY] = '0';
+        }
+
+        if (mark != ' ') {
+            lastInput = mark;
+            lastCells.add(new Cell(cellX, cellY, lastInput));
+        } else {
+            field[cellX][cellY] = ' ';
         }
         showField();
     }
@@ -178,13 +192,20 @@ public class Field {
         System.out.print("[" + field[i][i2] + "]");
     }
 
-    // Класс Cell для хранения и возврата координат cellX и cellY выбранного лучшего поля при поиске очередного хода AI
+    // Класс Cell для хранения и возврата отметки(mark) и координат cellX, cellY выбранного лучшего поля при поиске очередного хода AI.
     class Cell {
         int cellX;
         int cellY;
+        char mark;
         Cell() {
             cellX=-1;
             cellY=-1;
+        }
+
+        Cell(int x, int y, char lastMark) {
+            cellX=x;
+            cellY=y;
+            mark = lastMark;
         }
     }
 
